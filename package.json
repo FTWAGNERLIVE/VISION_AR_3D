@@ -4,7 +4,6 @@
   "description": "AR QR 3D Viewer",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
     "dev": "node server.js"
   },
   "dependencies": {
