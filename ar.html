@@ -267,23 +267,37 @@
             
             animBadge.style.display = 'block';
 
+            // --- Lógica de Auto-Escala e Centralização ---
+            const box = new THREE.Box3().setFromObject(model);
+            const size = box.getSize(new THREE.Vector3());
+            const center = box.getCenter(new THREE.Vector3());
+            
+            // Ajusta para que o maior lado tenha aproximadamente 1 unidade de tamanho AR
+            const maxDim = Math.max(size.x, size.y, size.z);
+            const scaleFactor = 1.0 / maxDim;
+            
+            modelEntity.setAttribute('scale', `${scaleFactor} ${scaleFactor} ${scaleFactor}`);
+            
+            // Reposiciona para que a base do modelo fique no marcador (0 0 0)
+            // e não "dentro" dele
+            model.position.x = -center.x;
+            model.position.y = -box.min.y;
+            model.position.z = -center.z;
+            // --------------------------------------------
+
             if (animations && animations.length > 0) {
                 const firstAnimName = animations[0].name;
                 animBadge.innerText = `🎬 Animação: "${firstAnimName}" OK`;
                 animBadge.classList.add('ready');
                 
-                // Força o início da animação específica pelo NOME
                 modelEntity.setAttribute('animation-mixer', {
                     clip: firstAnimName,
                     loop: 'repeat',
-                    timeScale: 2
+                    timeScale: 1
                 });
-                
-                console.log(`✅ Animando clipe: ${firstAnimName}`);
             } else {
                 animBadge.innerText = '⚠️ Sem dados de animação';
                 animBadge.classList.add('error');
-                console.warn("❌ Modelo sem animação.");
             }
         });
     </script>
