@@ -1,0 +1,13 @@
+{
+  "name": "vision3d",
+  "version": "1.0.0",
+  "description": "AR QR 3D Viewer",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "selfsigned": "^2.4.1"
+  }
+}

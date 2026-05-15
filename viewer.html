@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Vision3D — Visualizador QR 3D</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- QR Code Scanner Library -->
+    <script src="https://unpkg.com/html5-qrcode"></script>
+
+    <!-- Three.js Import Map -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --primary: #6366f1;
+            --bg: #0f172a;
+            --glass: rgba(255,255,255,0.05);
+            --border: rgba(255,255,255,0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--bg);
+            color: #f8fafc;
+            font-family: 'Outfit', sans-serif;
+            height: 100dvh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        main { flex: 1; position: relative; }
+
+        section {
+            position: absolute;
+            inset: 0;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        /* ── Scanner Section ── */
+        #scanner-section { display: flex; }
+
+        .scanner-container {
+            width: 100%;
+            max-width: 400px;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 1.5rem;
+            backdrop-filter: blur(12px);
+            text-align: center;
+        }
+
+        #reader {
+            width: 100%;
+            border-radius: 16px;
+            overflow: hidden;
+            background: #000;
+            margin-bottom: 1.5rem;
+        }
+
+        #status {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            margin-bottom: 1rem;
+        }
+
+        /* ── Viewer Section ── */
+        #viewer-section { background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%); }
+
+        #canvas-container {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+        }
+
+        .ui-layer {
+            position: absolute;
+            inset: 0;
+            z-index: 10;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 1.5rem;
+        }
+
+        #info-tag {
+            align-self: center;
+            background: rgba(0,0,0,0.6);
+            padding: 0.5rem 1.2rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border);
+            pointer-events: auto;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            pointer-events: auto;
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .btn.secondary {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(8px);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <main>
+        <!-- Seção de Scanner -->
+        <section id="scanner-section">
+            <div class="scanner-container">
+                <h2 style="margin-bottom: 0.5rem;">Escanear QR</h2>
+                <p id="status">Iniciando câmera...</p>
+                <div id="reader"></div>
+                <div style="display: flex; gap: 0.5rem; justify-content: center;">
+                    <button id="demo-btn" class="btn secondary">Ver Exemplo</button>
+                    <a href="index.html" class="btn secondary">Voltar</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção de Visualizador 3D -->
+        <section id="viewer-section">
+            <div id="canvas-container"></div>
+            
+            <div class="ui-layer">
+                <div id="info-tag">Carregando modelo...</div>
+                
+                <div class="controls">
+                    <button id="back-btn" class="btn">← Novo Scan</button>
+                    <a href="index.html" class="btn secondary">Início</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>

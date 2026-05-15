@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vision3D — QR + AR Experience</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-glow: rgba(99,102,241,0.5);
+            --bg: #0f172a;
+            --glass: rgba(255,255,255,0.05);
+            --border: rgba(255,255,255,0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--bg);
+            color: #f8fafc;
+            font-family: 'Outfit', sans-serif;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem 1rem;
+            overflow-y: auto;
+        }
+
+        .logo {
+            font-size: clamp(1.6rem, 6vw, 2.5rem);
+            font-weight: 700;
+            letter-spacing: clamp(2px, 1vw, 4px);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .logo span {
+            background: linear-gradient(135deg, #6366f1, #0ea5e9);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+        }
+
+        .tagline {
+            color: #64748b;
+            font-size: clamp(0.78rem, 2.5vw, 0.95rem);
+            margin-bottom: clamp(1.5rem, 5vw, 3rem);
+            text-align: center;
+            padding: 0 0.5rem;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+            gap: 1rem;
+            width: 100%;
+            max-width: 680px;
+        }
+
+        .card {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: clamp(1.2rem, 4vw, 2rem);
+            text-align: center;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .card:hover, .card:active {
+            transform: translateY(-4px);
+            border-color: rgba(99,102,241,0.5);
+            box-shadow: 0 24px 50px rgba(0,0,0,0.5), 0 0 30px rgba(99,102,241,0.2);
+        }
+
+        .card-icon {
+            font-size: clamp(2rem, 7vw, 3rem);
+            margin-bottom: 0.8rem;
+            filter: drop-shadow(0 0 10px rgba(99,102,241,0.6));
+        }
+
+        .card h2 {
+            font-size: clamp(0.95rem, 3vw, 1.2rem);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #a5b4fc;
+        }
+
+        .card p {
+            font-size: clamp(0.78rem, 2.2vw, 0.85rem);
+            color: #64748b;
+            line-height: 1.5;
+        }
+
+        .badge {
+            margin-top: 1rem;
+            font-size: 0.68rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+        }
+
+        .badge-ar {
+            background: rgba(99,102,241,0.2);
+            border: 1px solid rgba(99,102,241,0.4);
+            color: #a5b4fc;
+        }
+
+        .badge-qr {
+            background: rgba(14,165,233,0.2);
+            border: 1px solid rgba(14,165,233,0.4);
+            color: #7dd3fc;
+        }
+
+        /* Blobs */
+        .blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.35;
+            pointer-events: none;
+            z-index: -1;
+            animation: blobFloat 20s ease-in-out infinite alternate;
+        }
+
+        .blob-1 { width: 400px; height: 400px; background: #4f46e5; top: -100px; right: -80px; }
+        .blob-2 { width: 350px; height: 350px; background: #7c3aed; bottom: -80px; left: -60px; animation-delay: -7s; }
+        .blob-3 { width: 250px; height: 250px; background: #0ea5e9; top: 40%; left: 30%; animation-delay: -14s; opacity: 0.2; }
+
+        @keyframes blobFloat {
+            0%   { transform: translate(0, 0) scale(1); }
+            50%  { transform: translate(40px, -30px) scale(1.1); }
+            100% { transform: translate(-20px, 40px) scale(0.95); }
+        }
+    </style>
+</head>
+<body>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+
+    <div class="logo">Vision<span>3D</span></div>
+    <p class="tagline">Realidade Aumentada no seu navegador — sem apps</p>
+
+    <div class="cards">
+
+        <a href="ar.html" class="card">
+            <div class="card-icon">📷</div>
+            <h2>Câmera AR</h2>
+            <p>Abra a câmera, aponte para o marcador e veja o cristal 3D holográfico aparecer no mundo real.</p>
+            <span class="badge badge-ar">✦ AR ao vivo</span>
+        </a>
+
+        <a href="viewer.html" class="card">
+            <div class="card-icon">🎯</div>
+            <h2>Scanner 3D</h2>
+            <p>Escaneie qualquer QR Code para carregar o seu modelo 3D local em um ambiente interativo de 360°.</p>
+            <span class="badge badge-qr">✦ Visualizar GLB</span>
+        </a>
+
+        <a href="marker.html" class="card">
+            <div class="card-icon">🖨️</div>
+            <h2>Imprimir Marcador</h2>
+            <p>Obtenha o marcador HIRO e o QR Code necessários para a experiência de Realidade Aumentada.</p>
+            <span class="badge badge-qr">✦ Preparar</span>
+        </a>
+
+    </div>
+
+</body>
+</html>

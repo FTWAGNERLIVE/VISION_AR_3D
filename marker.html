@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vision3D — Marcador para Impressão</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- QR Code generator -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <style>
+        :root {
+            --primary: #6366f1;
+            --bg: #0f172a;
+            --glass: rgba(255,255,255,0.05);
+            --border: rgba(255,255,255,0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--bg);
+            color: #f8fafc;
+            font-family: 'Outfit', sans-serif;
+            min-height: 100dvh;
+            padding: clamp(1rem, 4vw, 2rem);
+            overflow-x: hidden;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+        }
+
+        .logo {
+            font-size: clamp(1.2rem, 5vw, 1.6rem);
+            font-weight: 700;
+            letter-spacing: clamp(1px, 1vw, 3px);
+        }
+        .logo span {
+            background: linear-gradient(135deg, #6366f1, #0ea5e9);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+        }
+        .subtitle {
+            color: #94a3b8;
+            margin-top: 0.4rem;
+            font-size: clamp(0.75rem, 2.5vw, 0.95rem);
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+            gap: clamp(1rem, 3vw, 2rem);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: clamp(1.2rem, 4vw, 2rem);
+            text-align: center;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .card h2 {
+            font-size: clamp(0.9rem, 3vw, 1.1rem);
+            margin-bottom: 0.4rem;
+            color: #a5b4fc;
+        }
+
+        .card p {
+            font-size: clamp(0.75rem, 2.2vw, 0.82rem);
+            color: #64748b;
+            margin-bottom: 1.2rem;
+        }
+
+        /* Hiro Marker — responsive size */
+        .marker-wrapper {
+            background: #fff;
+            border-radius: 12px;
+            padding: clamp(0.6rem, 2vw, 1rem);
+            display: inline-block;
+            box-shadow: 0 0 40px rgba(99,102,241,0.3);
+            max-width: 100%;
+        }
+
+        .marker-wrapper img {
+            display: block;
+            width: clamp(160px, 45vw, 220px);
+            height: clamp(160px, 45vw, 220px);
+            image-rendering: pixelated;
+        }
+
+        /* QR Code — responsive */
+        #qr-code {
+            display: flex;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        #qr-code canvas,
+        #qr-code img {
+            border-radius: 12px;
+            box-shadow: 0 0 40px rgba(14,165,233,0.3);
+            max-width: 100%;
+            height: auto !important;
+        }
+
+        .instructions {
+            margin-top: clamp(1rem, 3vw, 2rem);
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: clamp(1rem, 3vw, 1.5rem) clamp(1rem, 3vw, 2rem);
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .instructions h3 {
+            color: #a5b4fc;
+            margin-bottom: 0.8rem;
+            font-size: clamp(0.85rem, 2.5vw, 1rem);
+        }
+
+        .steps {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .steps li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.8rem;
+            font-size: clamp(0.78rem, 2.2vw, 0.88rem);
+            color: #94a3b8;
+            text-align: left;
+        }
+
+        .step-num {
+            background: linear-gradient(135deg, #6366f1, #0ea5e9);
+            color: white;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+            margin-top: clamp(1rem, 3vw, 2rem);
+            flex-wrap: wrap;
+            padding-bottom: 1rem;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            border: none;
+            color: #fff;
+            padding: 0.7rem 1.2rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(0.78rem, 2.5vw, 0.9rem);
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all 0.25s;
+            box-shadow: 0 0 20px rgba(99,102,241,0.4);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn:hover, .btn:active {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(99,102,241,0.6);
+        }
+
+        .btn.secondary {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            box-shadow: none;
+            color: #94a3b8;
+        }
+
+        .btn.secondary:hover, .btn.secondary:active {
+            border-color: var(--primary);
+            color: #fff;
+        }
+
+        /* Background blobs */
+        .blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.25;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .blob-1 { width: 400px; height: 400px; background: #4f46e5; top: -100px; right: -80px; }
+        .blob-2 { width: 350px; height: 350px; background: #0ea5e9; bottom: -80px; left: -60px; }
+
+        @media print {
+            body { background: white; color: black; padding: 1rem; }
+            .page-header .subtitle,
+            .instructions, .btn-group,
+            .blob { display: none; }
+            .cards-grid { grid-template-columns: 1fr 1fr; }
+            .card {
+                background: white;
+                border: 1px solid #ccc;
+                box-shadow: none;
+                color: black;
+            }
+            .card h2 { color: #333; }
+            .card p { color: #666; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <div class="page-header">
+        <div class="logo">Vision<span>3D</span></div>
+        <p class="subtitle">Imprima o marcador e escaneie o QR para a experiência AR</p>
+    </div>
+
+    <div class="cards-grid">
+
+        <!-- Marcador AR (Hiro) -->
+        <div class="card">
+            <h2>🎯 Marcador AR — Imprima e coloque no chão</h2>
+            <p>O objeto 3D aparece em cima deste marcador quando a câmera AR o detecta</p>
+            <div class="marker-wrapper">
+                <img
+                    src="hiro.jpg"
+                    alt="Hiro AR Marker"
+                />
+            </div>
+        </div>
+
+        <!-- QR Code para abrir o AR -->
+        <div class="card">
+            <h2>📱 QR Code — Abra a câmera AR</h2>
+            <p>Escaneie com seu celular para abrir o visualizador de Realidade Aumentada</p>
+            <div id="qr-code"></div>
+            <p style="margin-top:1rem; font-size: 0.75rem; color: #475569;" id="qr-url-display"></p>
+        </div>
+
+    </div>
+
+    <div class="instructions">
+        <h3>📋 Como usar</h3>
+        <ul class="steps">
+            <li>
+                <span class="step-num">1</span>
+                <span>Imprima ou exiba o <strong>Marcador AR</strong> ao lado. Pode colocar no chão, mesa ou parede.</span>
+            </li>
+            <li>
+                <span class="step-num">2</span>
+                <span>Com seu celular, escaneie o <strong>QR Code</strong> para abrir o visualizador AR no navegador.</span>
+            </li>
+            <li>
+                <span class="step-num">3</span>
+                <span>Aponte a câmera do celular para o marcador impresso. O cristal 3D aparecerá em cima dele.</span>
+            </li>
+            <li>
+                <span class="step-num">4</span>
+                <span>Mova o celular ao redor para ver o objeto 3D de diferentes ângulos. 🎉</span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="btn-group">
+        <a href="ar.html" class="btn">🚀 Abrir Câmera AR</a>
+        <button class="btn secondary" onclick="window.print()">🖨️ Imprimir Marcador</button>
+        <a href="index.html" class="btn secondary">← Voltar</a>
+    </div>
+
+    <script>
+        function generateQR(url) {
+            // Clear any previous QR
+            document.getElementById('qr-code').innerHTML = '';
+            document.getElementById('qr-url-display').innerText = url;
+
+            new QRCode(document.getElementById('qr-code'), {
+                text: url,
+                width: 220,
+                height: 220,
+                colorDark: '#0f172a',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        }
+
+        // Busca o IP real do servidor via API
+        // Isso garante que o QR sempre aponte para o IP da rede, não localhost
+        fetch('/api/server-info')
+            .then(r => r.json())
+            .then(info => {
+                generateQR(info.arUrl);
+                // Também corrige o link do botão "Abrir Câmera AR"
+                const btn = document.querySelector('a.btn[href="ar.html"]');
+                if (btn) btn.href = info.arUrl;
+            })
+            .catch(() => {
+                // Fallback: usa a URL atual se a API falhar
+                const fallback = window.location.origin + window.location.pathname.replace('marker.html', 'ar.html');
+                generateQR(fallback);
+            });
+    </script>
+
+
+</body>
+</html>

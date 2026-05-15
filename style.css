@@ -1,0 +1,271 @@
+:root {
+    --primary: #6366f1;
+    --primary-glow: rgba(99, 102, 241, 0.5);
+    --bg-dark: #0f172a;
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Outfit', sans-serif;
+}
+
+html, body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+}
+
+#app {
+    position: relative;
+    z-index: 10;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    padding: 1.5rem 2rem;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.logo {
+    font-size: 1.6rem;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+.logo span {
+    background: linear-gradient(135deg, #6366f1, #0ea5e9);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+main {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Sections are hidden by default; JS shows them via inline style */
+section {
+    display: none;
+    position: absolute;
+    inset: 0;
+    padding: 1rem 2rem 2rem;
+}
+
+section.active {
+    display: flex;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.97); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+/* ── Scanner Section ── */
+#scanner-section {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.glass-container {
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-radius: 28px;
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 480px;
+    text-align: center;
+    box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255,255,255,0.1);
+}
+
+h1 {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+p {
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+}
+
+#reader {
+    width: 100%;
+    border-radius: 16px;
+    overflow: hidden;
+    margin: 0 auto;
+    border: 1px solid var(--glass-border);
+    background: rgba(0,0,0,0.3);
+    min-height: 240px;
+}
+
+.status-bar {
+    margin-top: 1.2rem;
+    font-size: 0.9rem;
+    color: var(--primary);
+    font-weight: 500;
+    min-height: 1.2em;
+    transition: color 0.3s;
+}
+
+/* ── Viewer Section ── */
+#viewer-section {
+    position: absolute;
+    inset: 0;
+    padding: 0;
+}
+
+#canvas-container {
+    width: 100%;
+    height: 100%;
+}
+
+.controls {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 20;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+/* ── Buttons ── */
+.glass-btn {
+    background: linear-gradient(135deg, var(--primary), #4f46e5);
+    border: none;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 20px var(--primary-glow);
+    letter-spacing: 0.5px;
+}
+
+.glass-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 40px var(--primary-glow);
+}
+
+.glass-btn:active {
+    transform: translateY(-1px);
+}
+
+.glass-btn.secondary {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(8px);
+    box-shadow: none;
+    color: var(--text-muted);
+    margin-top: 1rem;
+    font-size: 0.8rem;
+    opacity: 0.8;
+}
+
+.glass-btn.secondary:hover {
+    opacity: 1;
+    border-color: var(--primary);
+    color: var(--text-main);
+    box-shadow: 0 0 20px var(--primary-glow);
+}
+
+.glass-tag {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    padding: 0.75rem 1.4rem;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    color: var(--text-main);
+    transition: color 0.3s;
+}
+
+/* ── Background Blobs ── */
+.background-blobs {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: 0.45;
+    animation: blobFloat 18s ease-in-out infinite alternate;
+}
+
+.blob-1 {
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, #4f46e5, transparent);
+    top: -150px;
+    right: -100px;
+    animation-duration: 20s;
+}
+
+.blob-2 {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, #7c3aed, transparent);
+    bottom: -100px;
+    left: -80px;
+    animation-duration: 25s;
+    animation-delay: -8s;
+}
+
+.blob-3 {
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, #0ea5e9, transparent);
+    top: 35%;
+    left: 25%;
+    animation-duration: 15s;
+    animation-delay: -4s;
+}
+
+@keyframes blobFloat {
+    0%   { transform: translate(0, 0) scale(1); }
+    33%  { transform: translate(60px, -40px) scale(1.1); }
+    66%  { transform: translate(-30px, 50px) scale(0.95); }
+    100% { transform: translate(80px, 30px) scale(1.15); }
+}
+
+/* ── QR Library UI overrides ── */
+#reader__dashboard_section_csr button,
+#reader__dashboard_section_swaplink {
+    background: var(--primary) !important;
+    border: none !important;
+    color: white !important;
+    border-radius: 8px !important;
+    padding: 8px 14px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    font-family: 'Outfit', sans-serif !important;
+}
+
+#reader__status_span { color: var(--text-muted) !important; font-size: 0.8rem !important; }
+#reader__header_message { display: none !important; }
+#reader img { border-radius: 8px !important; }
