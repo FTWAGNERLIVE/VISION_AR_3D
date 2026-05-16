@@ -71,6 +71,11 @@ function init() {
     markerRoot = new THREE.Group();
     scene.add(markerRoot);
 
+    // Patch para consertar o erro "this.dispatchEvent is not a function" entre Three.js e AR.js
+    if (!THREEx.ArMarkerControls.prototype.dispatchEvent) {
+        Object.assign(THREEx.ArMarkerControls.prototype, THREE.EventDispatcher.prototype);
+    }
+
     new THREEx.ArMarkerControls(arToolkitContext, markerRoot, {
         type: 'pattern',
         patternUrl: 'hiro.patt',
@@ -78,21 +83,6 @@ function init() {
         smoothCount: 5,
         smoothTolerance: 0.05,
         smoothThreshold: 2
-    });
-
-    // Eventos de Tracking para UI UI
-    markerRoot.addEventListener('markerFound', () => {
-        const status = document.getElementById('tracking-status');
-        const text = document.getElementById('status-text');
-        status.className = 'ar-status found';
-        text.innerText = 'Marcador Encontrado!';
-    });
-
-    markerRoot.addEventListener('markerLost', () => {
-        const status = document.getElementById('tracking-status');
-        const text = document.getElementById('status-text');
-        status.className = 'ar-status searching';
-        text.innerText = 'Buscando Marcador...';
     });
 
     // 5. Carregar o Modelo GLB
