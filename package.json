@@ -2,7 +2,7 @@
   "name": "vision3d-pure-threejs",
   "version": "2.0.0",
   "scripts": {
-    "dev": "node server.js"
+    "dev": "node local-dev.js"
   },
   "dependencies": {
     "express": "^4.18.2",

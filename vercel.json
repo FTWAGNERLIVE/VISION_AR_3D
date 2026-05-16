@@ -1,5 +1,8 @@
 {
-  "buildCommand": "echo 'Static deploy'",
-  "installCommand": "echo 'No install'",
-  "outputDirectory": "."
+  "builds": [
+    {
+      "src": "**",
+      "use": "@vercel/static"
+    }
+  ]
 }
