@@ -1,8 +1,11 @@
 {
-  "name": "vision3d",
-  "version": "1.0.0",
-  "description": "AR QR 3D Viewer",
+  "name": "vision3d-pure-threejs",
+  "version": "2.0.0",
   "scripts": {
     "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "selfsigned": "^2.1.1"
   }
 }

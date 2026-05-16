@@ -1,6 +1,0 @@
-node_modules/
-cert/
-key.pem
-cert.pem
-.DS_Store
-*.log

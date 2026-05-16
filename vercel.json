@@ -1,9 +1,5 @@
 {
-  "version": 2,
-  "public": true,
-  "cleanUrls": true,
-  "trailingSlash": false,
-  "framework": null,
-  "buildCommand": null,
-  "installCommand": null
+  "buildCommand": "echo 'Static deploy'",
+  "installCommand": "echo 'No install'",
+  "outputDirectory": "."
 }
