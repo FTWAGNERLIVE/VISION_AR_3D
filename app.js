@@ -58,6 +58,11 @@ function init() {
     }
 
     // 3. Setup do Contexto de Tracking do AR.js
+    // Patch para consertar o erro "this.dispatchEvent is not a function"
+    if (THREEx.ArToolkitContext && !THREEx.ArToolkitContext.prototype.dispatchEvent) {
+        Object.assign(THREEx.ArToolkitContext.prototype, THREE.EventDispatcher.prototype);
+    }
+
     arToolkitContext = new THREEx.ArToolkitContext({
         cameraParametersUrl: 'https://raw.githack.com/AR-js-org/AR.js/master/data/data/camera_para.dat',
         detectionMode: 'mono'
@@ -71,8 +76,7 @@ function init() {
     markerRoot = new THREE.Group();
     scene.add(markerRoot);
 
-    // Patch para consertar o erro "this.dispatchEvent is not a function" entre Three.js e AR.js
-    if (!THREEx.ArMarkerControls.prototype.dispatchEvent) {
+    if (THREEx.ArMarkerControls && !THREEx.ArMarkerControls.prototype.dispatchEvent) {
         Object.assign(THREEx.ArMarkerControls.prototype, THREE.EventDispatcher.prototype);
     }
 
