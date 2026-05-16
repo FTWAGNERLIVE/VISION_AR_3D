@@ -3,8 +3,10 @@ let scene, camera, renderer, clock, mixer;
 let arToolkitSource, arToolkitContext;
 let markerRoot;
 
-init();
-animate();
+window.addEventListener('load', () => {
+    init();
+    animate();
+});
 
 function init() {
     // 1. Setup Básico do Three.js
